@@ -17,7 +17,7 @@ def query_user_by_openid(openid):
     """
     try:
         logger.info("openid= {}".format(openid))
-        logger.info("user= {}".format(json.dumps(Users.filter(Users.id == 2).first().to_dict)))
+        logger.info("user= {}".format(json.dumps(Users.query.filter(Users.id == 2).first().to_dict)))
 
         return db.session.query(Users).filter_by(openid = openid).first()
     except OperationalError as e:
