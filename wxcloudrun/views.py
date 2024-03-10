@@ -1,9 +1,11 @@
 from datetime import datetime
-from flask import render_template, request
+import json
+from flask import render_template, request, jsonify
 from run import app
 from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
 from wxcloudrun.model import Counters
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
+import requests
 
 
 @app.route('/')
@@ -64,3 +66,45 @@ def get_count():
     """
     counter = Counters.query.filter(Counters.id == 1).first()
     return make_succ_response(0) if counter is None else make_succ_response(counter.count)
+
+
+@app.route('/phone', methods=['POST'])  
+def get_phone():  
+    # 获取请求头中的 x-wx-openid  
+    openid = request.headers.get('x-wx-openid')  
+      
+    # 构建微信 API 请求 URL  
+    api_url = f"http://api.weixin.qq.com/wxa/getopendata?openid={openid}"  
+      
+    # 准备 POST 请求体  
+    cloudid = request.json.get('cloudid')  
+    body = {  
+        "cloudid_list": [cloudid]  
+    }  
+      
+    # 发起 POST 请求到微信 API  
+    response = requests.post(api_url, json=body)  
+      
+    # 检查请求是否成功  
+    if response.status_code == 200:  
+        try:  
+            # 解析响应数据  
+            data_list = response.json().get('data_list', [])  
+            if data_list:  
+                # 解析手机号信息  
+                json_data = data_list[0].get('json')  
+                phone_data = json.loads(json_data)  
+                phone = phone_data.get('data', {}).get('phoneNumber')  
+                  
+                # 将手机号返回给客户端  
+                # 注意：在实际场景中，应对手机号进行保护处理  
+                return jsonify(phone)  
+        except json.JSONDecodeError as e:  
+            # 处理 JSON 解析错误  
+            return jsonify({'error': 'Failed to parse JSON data'}), 400  
+        except Exception as e:  
+            # 处理其他异常  
+            return jsonify({'error': 'Internal server error'}), 500  
+    else:  
+        # 处理微信 API 请求失败的情况  
+        return jsonify({'error': 'Failed to get phone number from WeChat API'}), response.status_code
