@@ -84,6 +84,18 @@ def get_phone():
       
     # 发起 POST 请求到微信 API  
     response = requests.post(api_url, json=body)  
+
+    print(f'Status code: {response.status_code}')  
+    print('Headers:')  
+    for key, value in response.headers.items():  
+        print(f'{key}: {value}')  
+    print('Content:')  
+    print(response.text)  
+    print('URL:', response.url)  
+    print('Cookies:')  
+    for cookie in response.cookies:  
+        print(f'{cookie}: {response.cookies[cookie]}')  
+    print('Encoding:', response.encoding)  
       
     # 检查请求是否成功  
     if response.status_code == 200:  
