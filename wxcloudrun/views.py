@@ -119,4 +119,8 @@ def get_phone():
             return jsonify({'error': 'Internal server error'}), 500  
     else:  
         # 处理微信 API 请求失败的情况  
-        return jsonify({'error': 'Failed to get phone number from WeChat API'}), response.status_code
+        return jsonify({
+            'error': 'Failed to get phone number from WeChat API',
+            'Status code': f'{response.status_code}',
+            'Content:': 'response.text',
+            }), response.status_code
