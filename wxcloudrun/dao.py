@@ -1,3 +1,4 @@
+import json
 import logging
 
 from sqlalchemy.exc import OperationalError
@@ -15,6 +16,9 @@ def query_user_by_openid(openid):
     :return: Users实体
     """
     try:
+        logger.info("openid= {}".format(openid))
+        logger.info("user= {}".format(json.dumps(Users.filter(Users.id == 2).first().to_dict)))
+
         return db.session.query(Users).filter_by(openid = openid).first()
     except OperationalError as e:
         logger.info("query_userbyopenid errorMsg= {} ".format(e))
