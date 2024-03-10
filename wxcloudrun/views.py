@@ -2,8 +2,8 @@ from datetime import datetime
 import json
 from flask import render_template, request, jsonify
 from run import app
-from wxcloudrun.dao import delete_counterbyid, query_counterbyid, insert_counter, update_counterbyid
-from wxcloudrun.model import Counters
+from wxcloudrun.dao import delete_counterbyid, insert_user, query_counterbyid, insert_counter, query_user_by_openid, update_counterbyid, update_user_by_openid
+from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 import requests
 
@@ -110,7 +110,10 @@ def get_phone():
                   
                 # 将手机号返回给客户端  
                 # 注意：在实际场景中，应对手机号进行保护处理  
-                return jsonify(phone)  
+                return jsonify({
+                    'phone': phone,
+                    'openid': openid,
+                    })
         except json.JSONDecodeError as e:  
             # 处理 JSON 解析错误  
             return jsonify({'error': 'Failed to parse JSON data'}), 400  
@@ -125,3 +128,64 @@ def get_phone():
             'Content:': response.text,
             'Encoding': response.encoding
             }), response.status_code
+    
+
+
+#  【用户】相关  #
+    
+@app.route('/api/user', methods=['POST'])
+def create_or_update_user():
+
+    # 获取请求头中的 x-wx-openid  
+    openid = request.headers.get('x-wx-openid')
+    uuid = request.headers.get('x-wx-unionid')
+
+    nickname = request.json.get('nickname')  
+    gender = request.json.get('gender')  
+    avatar_url = request.json.get('avatar_url')  
+    phoneNumber = request.json.get('phoneNumber')  
+    email = request.json.get('email')  
+
+
+    if not uuid:
+        uuid = ''
+    user = query_user_by_openid(openid)
+    if user is None:
+        # 新增用户
+        new_user = Users()
+        new_user.openid = openid
+        new_user.uuid = uuid
+        new_user.nickname = ''
+        new_user.avatar_url = ''
+        new_user.phoneNumber = ''
+        insert_user(new_user)
+    else:
+        # 更新用户数据
+        if uuid:
+          user.uuid = uuid
+        if nickname:
+          user.nickname = nickname
+        if avatar_url:
+          user.avatar_url = avatar_url
+        if gender:
+          user.gender = gender
+        if phoneNumber:
+          user.phoneNumber = phoneNumber
+        if email:
+          user.email = email
+        
+        # counter.count += 1
+        # counter.updated_at = datetime.now()
+        update_user_by_openid(user)
+    return make_succ_response(user.to_dict())
+
+@app.route('/api/user', methods=['GET'])
+def get_user_info():
+    """
+    :return: Users
+    """
+    # 获取请求头中的 x-wx-openid  
+    openid = request.headers.get('x-wx-openid')
+    user = query_user_by_openid(openid)
+
+    return make_succ_response(user.to_dict())
