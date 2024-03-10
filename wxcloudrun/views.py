@@ -186,6 +186,10 @@ def get_user_info():
     """
     # 获取请求头中的 x-wx-openid  
     openid = request.headers.get('x-wx-openid')
+    print(openid)
     user = query_user_by_openid(openid)
-
-    return jsonify(user.to_dict())
+    if user:
+      print(user.id)
+      return jsonify(user.to_dict())
+    else:
+      return jsonify({})
