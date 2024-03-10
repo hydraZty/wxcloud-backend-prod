@@ -122,5 +122,6 @@ def get_phone():
         return jsonify({
             'error': 'Failed to get phone number from WeChat API',
             'Status code': f'{response.status_code}',
-            'Content:': 'response.text',
+            'Content:': response.text,
+            'Encoding': response.encoding
             }), response.status_code
