@@ -44,7 +44,7 @@ class Users(db.Model):
             'openid': self.openid,
             'uuid': self.uuid,
             'nickname': self.nickname,
-            'avatar': self.avatar,
+            'avatar_url': self.avatar_url,
             'gender': self.gender,
             'phoneNumber': self.phoneNumber,
             'email': self.email,
