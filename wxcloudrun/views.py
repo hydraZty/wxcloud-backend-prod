@@ -180,4 +180,4 @@ def get_user_info():
       print(user.id)
       return make_succ_response(user.to_dict())
     else:
-      return make_succ_response({openid: openid, user: user})
+      return make_succ_response({'openid': openid, 'user': user})
