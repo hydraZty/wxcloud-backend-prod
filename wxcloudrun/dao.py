@@ -15,7 +15,7 @@ def query_user_by_openid(openid):
     :return: Users实体
     """
     try:
-        return Users.query.filter(Users.openid == openid).first()
+        return db.session.query(Users).filter_by(openid = openid).first()
     except OperationalError as e:
         logger.info("query_userbyopenid errorMsg= {} ".format(e))
         return None
