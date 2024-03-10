@@ -165,7 +165,7 @@ def create_or_update_user():
         # counter.count += 1
         # counter.updated_at = datetime.now()
         update_user_by_openid(user)
-    return jsonify(user.to_dict())
+    return make_succ_response(user.to_dict())
 
 @app.route('/api/user', methods=['GET'])
 def get_user_info():
@@ -178,6 +178,6 @@ def get_user_info():
     user = query_user_by_openid(openid)
     if user:
       print(user.id)
-      return jsonify(user.to_dict())
+      return make_succ_response(user.to_dict())
     else:
-      return jsonify({openid: openid, user: user})
+      return make_succ_response({openid: openid, user: user})
