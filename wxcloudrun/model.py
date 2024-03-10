@@ -38,3 +38,19 @@ class Users(db.Model):
     created_at = db.Column('createdAt', db.TIMESTAMP, nullable=False, default=datetime.now())
     updated_at = db.Column('updatedAt', db.TIMESTAMP, nullable=False, default=datetime.now())
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'openid': self.openid,
+            'uuid': self.uuid,
+            'nickname': self.nickname,
+            'avatar': self.avatar,
+            'gender': self.gender,
+            'phoneNumber': self.phoneNumber,
+            'email': self.email,
+            'registration_date': self.registration_date,
+            'last_login_data': self.last_login_data,
+            'status': self.status,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+        }
