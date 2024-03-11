@@ -16,10 +16,7 @@ def query_user_by_openid(openid):
     :return: Users实体
     """
     try:
-        logger.info("openid= {}".format(openid))
-        logger.info("user= {}".format(json.dumps(Users.query.filter(Users.id == 2).first().to_dict)))
-
-        return db.session.query(Users).filter_by(openid = openid).first()
+        return Users.query.filter_by(openid = openid).first()
     except OperationalError as e:
         logger.info("query_userbyopenid errorMsg= {} ".format(e))
         return None

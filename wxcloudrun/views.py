@@ -131,7 +131,7 @@ def create_or_update_user():
     nickname = request.json.get('nickname')  
     gender = request.json.get('gender')  
     avatar_url = request.json.get('avatar_url')  
-    phoneNumber = request.json.get('phoneNumber')  
+    phone_number = request.json.get('phoneNumber')  
     email = request.json.get('email')  
 
 
@@ -145,7 +145,7 @@ def create_or_update_user():
         user.uuid = uuid
         user.nickname = ''
         user.avatar_url = ''
-        user.phoneNumber = ''
+        user.phone_number = ''
         insert_user(user)
     else:
         # 更新用户数据
@@ -157,13 +157,11 @@ def create_or_update_user():
           user.avatar_url = avatar_url
         if gender:
           user.gender = gender
-        if phoneNumber:
-          user.phoneNumber = phoneNumber
+        if phone_number:
+          user.phone_number = phone_number
         if email:
           user.email = email
         
-        # counter.count += 1
-        # counter.updated_at = datetime.now()
         update_user_by_openid(user)
     return make_succ_response(user.to_dict())
 
@@ -176,8 +174,22 @@ def get_user_info():
     openid = request.headers.get('x-wx-openid')
     print(openid)
     user = query_user_by_openid(openid)
+    
     if user:
       print(user.id)
       return make_succ_response(user.to_dict())
     else:
-      return make_succ_response({'openid': openid, 'user': user})
+      # 自动新增用户
+      user = Users()
+      user.openid = openid
+      insert_user(user)
+      return make_succ_response('New User')
+
+@app.route('/api/allUsers', methods=['GET'])
+def get_users():
+    """
+    :return: Users
+    """
+    users = Users.query.all()
+    users_list = [user.to_dict() for user in users]
+    return make_succ_response(users_list)
