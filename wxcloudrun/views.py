@@ -185,11 +185,15 @@ def get_user_info():
       insert_user(user)
       return make_succ_response('New User')
 
-@app.route('/api/allUsers', methods=['GET'])
-def get_users():
+@app.route('/cms/users/<int:page_num>', methods=['GET'])
+def get_users(page_num):
     """
     :return: Users
     """
-    users = Users.query.all()
+    phone = request.args.get('phone')
+    if phone:
+      users = Users.query.filter(Users.phone == phone).all()
+    else:  
+      users = Users.query.paginate(per_page=10, page=page_num, error_out=True)
     users_list = [user.to_dict() for user in users]
     return make_succ_response(users_list)
