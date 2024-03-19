@@ -146,6 +146,8 @@ def create_or_update_user():
         user.nickname = ''
         user.avatar_url = ''
         user.phone_number = ''
+        user.created_at = datetime.now()
+        user.updated_at = datetime.now()
         insert_user(user)
     else:
         # 更新用户数据
@@ -162,6 +164,7 @@ def create_or_update_user():
         if email:
           user.email = email
         
+        user.updated_at = datetime.now()
         update_user_by_openid(user)
     return make_succ_response(user.to_dict())
 
@@ -194,6 +197,7 @@ def get_users(page_num):
     if phone:
       users = Users.query.filter(Users.phone == phone).all()
     else:  
-      users = Users.query.paginate(per_page=10, page=page_num, error_out=True)
+      pagination= Users.query.paginate(per_page=10, page=page_num, error_out=True)
+      users = pagination.items
     users_list = [user.to_dict() for user in users]
     return make_succ_response(users_list)
