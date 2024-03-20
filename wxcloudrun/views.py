@@ -6,6 +6,7 @@ from wxcloudrun.dao import delete_counterbyid, insert_user, query_counterbyid, i
 from wxcloudrun.model import Counters, Users
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 import requests
+from sqlalchemy import desc
 
 
 @app.route('/')
@@ -193,9 +194,11 @@ def get_users(page_num):
     """
     :return: Users
     """
+    
+    # 头像由 cloud:// 转 http:// 在这里 https://developers.weixin.qq.com/miniprogram/dev/wxcloudrun/src/development/storage/service/download.html
     phone = request.args.get('phone')
     if phone:
-      users = Users.query.filter(Users.phone == phone).all()
+      users = Users.query.filter(Users.phone == phone).order_by(desc(Users.created_at)).all()
     else:  
       pagination= Users.query.paginate(per_page=10, page=page_num, error_out=True)
       users = pagination.items

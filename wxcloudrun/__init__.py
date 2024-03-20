@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS 
 import pymysql
 import config
 
@@ -8,6 +9,8 @@ pymysql.install_as_MySQLdb()
 
 # 初始化web应用
 app = Flask(__name__, instance_relative_config=True)
+
+cors = CORS(app, resources={r"/cms/*": {"origins": ["https://cms-manager-94815-8-1324712518.sh.run.tcloudbase.com", "http://test.com"]}})
 app.config['DEBUG'] = config.DEBUG
 
 # 设定数据库链接
