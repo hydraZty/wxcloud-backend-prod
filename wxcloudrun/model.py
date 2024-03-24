@@ -71,6 +71,7 @@ class Matchs(db.Model):
     finish_time = db.Column(db.Time)
     active = db.Column(db.Boolean)
     index = db.Column(db.Integer)
+    location = db.Column(db.String(20))
 
     def to_dict(self):
         return {
@@ -83,4 +84,5 @@ class Matchs(db.Model):
             'finish_time': self.finish_time.isoformat() if self.finish_time else None,
             'active': self.active,
             'index': self.index,
+            'location': self.location,
         }
