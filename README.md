@@ -122,3 +122,12 @@ curl -X POST -H 'content-type: application/json' -d '{"action": "inc"}' https://
 ## License
 
 [MIT](./LICENSE)
+
+
+
+### 本地调试：
+#### 根目录执行：
+
+docker build -f "Dockerfile" -t wxcloud_wxcloud-backend-prod:latest . 
+
+然后点击 Local Containers 里的 wxcloud-backend-prod，右键 Start

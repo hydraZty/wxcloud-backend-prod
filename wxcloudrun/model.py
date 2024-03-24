@@ -15,7 +15,7 @@ class Counters(db.Model):
     updated_at = db.Column('updatedAt', db.TIMESTAMP, nullable=False, default=datetime.now())
 
 
-# 计数表
+# 用户表
 class Users(db.Model):
     # 设置结构体表格名称
     __tablename__ = 'weixin_users'
@@ -53,4 +53,34 @@ class Users(db.Model):
             'status': self.status,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+        }
+
+
+# 场次表
+class Matchs(db.Model):
+    # 设置结构体表格名称
+    __tablename__ = 'Matchs'
+
+    # 设定结构体对应表格的字段
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    alias = db.Column(db.String(100))
+    date = db.Column(db.Date)
+    match_icon = db.Column(db.String(255))
+    carousel_icon = db.Column(db.String(255))
+    finish_time = db.Column(db.Time)
+    active = db.Column(db.Boolean)
+    index = db.Column(db.Integer)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'alias': self.alias,
+            'match_icon': self.match_icon,
+            'carousel_icon': self.carousel_icon,
+            'date': self.date.isoformat() if self.date else None,
+            'finish_time': self.finish_time.isoformat() if self.finish_time else None,
+            'active': self.active,
+            'index': self.index,
         }

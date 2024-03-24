@@ -3,7 +3,7 @@ import json
 from flask import render_template, request, jsonify
 from run import app
 from wxcloudrun.dao import delete_counterbyid, insert_user, query_counterbyid, insert_counter, query_user_by_openid, update_counterbyid, update_user_by_openid
-from wxcloudrun.model import Counters, Users
+from wxcloudrun.model import Counters, Users, Matchs
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 import requests
 from sqlalchemy import desc
@@ -204,3 +204,14 @@ def get_users(page_num):
       users = pagination.items
     users_list = [user.to_dict() for user in users]
     return make_succ_response(users_list)
+  
+      
+@app.route('/api/matchs', methods=['GET'])
+def get_matchs():
+    """
+    :return: Matchs
+    """
+    # 获取请求头中的 x-wx-openid  
+    matchs = Matchs.query.filter(Matchs.active == True).order_by(desc(Matchs.index)).all()
+    matchs_list = [match.to_dict() for match in matchs]
+    return make_succ_response(matchs_list)

@@ -4,8 +4,7 @@
       "name": "wxcloud-backend-prod",
       "domain": "",
       "ip": "",
-      "mode": "compose",
-      "containerId": "761a77059be1bdd1cee9da1188153e76b2ac717882519611e69200d6fff45abb"
+      "containerId": "c7509c20d601932b1676ff37884824a306879151fd6d47fe723a020752f85b62"
     }
   ],
   "config": {
