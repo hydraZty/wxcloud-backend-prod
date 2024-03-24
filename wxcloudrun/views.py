@@ -217,7 +217,7 @@ def get_matchs():
     return make_succ_response(matchs_list)
 
 @app.route('/api/matchByAlias', methods=['GET'])
-def get_matchs():
+def get_matchs_by_alias():
     """
     :return: Match
     """
