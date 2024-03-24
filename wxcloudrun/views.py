@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from flask import render_template, request, jsonify
 from run import app
-from wxcloudrun.dao import delete_counterbyid, insert_user, query_counterbyid, insert_counter, query_user_by_openid, update_counterbyid, update_user_by_openid
+from wxcloudrun.dao import delete_counterbyid, insert_user, query_counterbyid, insert_counter, query_user_by_openid, update_counterbyid, update_user_by_openid, query_match_by_alias
 from wxcloudrun.model import Counters, Users, Matchs
 from wxcloudrun.response import make_succ_empty_response, make_succ_response, make_err_response
 import requests
@@ -212,6 +212,19 @@ def get_matchs():
     :return: Matchs
     """
     # 获取请求头中的 x-wx-openid  
-    matchs = Matchs.query.filter(Matchs.active == True).order_by(desc(Matchs.index)).all()
+    matchs = Matchs.query.filter(Matchs.active == True).order_by(Matchs.index).all()
     matchs_list = [match.to_dict() for match in matchs]
     return make_succ_response(matchs_list)
+
+@app.route('/api/matchByAlias', methods=['GET'])
+def get_matchs():
+    """
+    :return: Match
+    """
+    alias = request.args.get('alias')
+    match = query_match_by_alias(alias)
+    
+    if match:
+      return make_succ_response(match.to_dict())
+    else:
+      return make_err_response('没获取到 alias 对应的 Match')

@@ -4,7 +4,7 @@ import logging
 from sqlalchemy.exc import OperationalError
 
 from wxcloudrun import db
-from wxcloudrun.model import Counters, Users
+from wxcloudrun.model import Counters, Users, Matchs
 
 # 初始化日志
 logger = logging.getLogger('log')
@@ -100,3 +100,16 @@ def update_counterbyid(counter):
         db.session.commit()
     except OperationalError as e:
         logger.info("update_counterbyid errorMsg= {} ".format(e))
+
+
+def query_match_by_alias(alias):
+    """
+    根据 alias 查询 Match 实体
+    :param alias: 接口 header 里获取到的 alias
+    :return: Match 实体
+    """
+    try:
+        return Matchs.query.filter_by(alias = alias).first()
+    except OperationalError as e:
+        logger.info("query_match_by_alias errorMsg= {} ".format(e))
+        return None
